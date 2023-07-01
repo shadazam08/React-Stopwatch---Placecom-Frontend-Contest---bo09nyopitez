@@ -1,59 +1,45 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import '../styles/App.css';
 const App = () => {
-  // const startTime = useRef(0);
+  const startTime = useRef(0);
   const intervalRef = useRef(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [laps, setLaps] = useState([]);
+  const [running, setRunning] = useState(false);
+  const [lapvisi, setlapvisi] = useState(false);
+  useEffect(() => {
+    let interval;
+    if (running) {
+      interval = setInterval(() => {
+        setCurrentTime((prevTime) => prevTime + .010);
+      }, 10);
+    } else if (!running) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [running]);
 
-  const startTimer = () => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setCurrentTime((prevTime) => prevTime + 10);
-    }, 10);
+  function handleLap() {
+    setLaps([...laps, currentTime])
+    setlapvisi(true)
   }
-  const stopTimer = () => {
-    clearInterval(intervalRef.current);
-  }
-  const lapTimer = () => {
-    const formattedTime = formatTime(currentTime);
-    setLaps((prevLaps) => [...prevLaps, formattedTime]);
-  };
-  const restTimer = () => {
-    clearInterval(intervalRef.current);
-    setCurrentTime(0);
-    setLaps([]);
-  }
-  const formatTime = (time) => {
-    const milliseconds = `00${time % 1000}`.slice(-3);
-    const seconds = `0${Math.floor((time / 1000) % 60)}`.slice(-2);
-    const minutes = `0${Math.floor((time / 1000 / 60) % 60)}`.slice(-2);
-    const hours = `0${Math.floor((time / 1000 / 3600) % 60)}`.slice(-2);
-    return `${hours}:${minutes}:${seconds}:${milliseconds}`;
-
-  }
-
   return (
     <div id="main">
       <section>
-        <h1 className='seconds-elapsed'>Stopwatch Time</h1>
-        <p>{formatTime(currentTime)}</p>
+        <h1 className='seconds-elapsed'>{currentTime.toFixed(3)}</h1>
         <section className='buttons'>
-          <button className="start-btn" onClick={startTimer}>START</button>
-          <button className="stop-btn" onClick={stopTimer}>STOP</button>
-          <button className="lap-btn" onClick={lapTimer}>LAP</button>
-          <button className="reset-btn" onClick={restTimer}>RESET</button>
+          <button className="start-btn" onClick={() => { setRunning(true) }}>START</button>
+          <button className="stop-btn" onClick={() => { setRunning(false) }}>STOP</button>
+          <button className="lap-btn" onClick={handleLap}>LAP</button>
+          <button className="reset-btn" onClick={() => { setRunning(false), setCurrentTime(0), setlapvisi(false), setLaps([]) }}>RESET</button>
         </section>
       </section>
-      <section className='lap-section'>
-        {laps.length > 0 && <h2>Laps</h2>}
+      {lapvisi && <section className='lap-section'>
+        <h2>Laps</h2>
         <section className='laps'>
-          {laps.map((lap, index) => { <p key={index}>{lap}</p> })}
-
-          {/* <p>lap</p>
-          <p>lap</p> */}
+          {laps.map((item) => <p>{item.toFixed(3)}</p>)}
         </section>
-      </section>
+      </section>}
     </div>
   )
 }
