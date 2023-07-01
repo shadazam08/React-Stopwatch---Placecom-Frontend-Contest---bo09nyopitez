@@ -16,7 +16,7 @@ const App = () => {
     clearInterval(intervalRef.current);
   }
   const lapTimer = () => {
-    const formattedTime = formatTime(time);
+    const formattedTime = formatTime(currentTime);
     setLaps((prevLaps) => [...prevLaps, formattedTime]);
   };
   const restTimer = () => {
@@ -30,7 +30,7 @@ const App = () => {
     const minutes = `0${Math.floor((time / 1000 / 60) % 60)}`.slice(-2);
     const hours = `0${Math.floor((time / 1000 / 3600) % 60)}`.slice(-2);
     return `${hours}:${minutes}:${seconds}:${milliseconds}`;
-    
+
   }
 
   return (
@@ -38,18 +38,19 @@ const App = () => {
       <section>
         <h1 className='seconds-elapsed'>Stopwatch Time</h1>
         <section className='buttons'>
-          <button className="start-btn" onClick={}>START</button>
-          <button className="stop-btn">STOP</button>
-          <button className="lap-btn">LAP</button>
-          <button className="reset-btn">RESET</button>
+          <button className="start-btn" onClick={startTimer}>START</button>
+          <button className="stop-btn" onClick={stopTimer}>STOP</button>
+          <button className="lap-btn" onClick={lapTimer}>LAP</button>
+          <button className="reset-btn" onClick={restTimer}>RESET</button>
         </section>
       </section>
       <section className='lap-section'>
-        <h2>Laps</h2>
+        {laps.length > 0 && <h2>Laps</h2>}
         <section className='laps'>
-          <p>lap</p>
-          <p>lap</p>
-          <p>lap</p>
+          {laps.map((lap, index) => { <p>{lap}</p> })}
+
+          {/* <p>lap</p>
+          <p>lap</p> */}
         </section>
       </section>
     </div>
