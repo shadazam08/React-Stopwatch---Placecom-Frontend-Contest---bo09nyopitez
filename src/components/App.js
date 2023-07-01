@@ -37,6 +37,7 @@ const App = () => {
     <div id="main">
       <section>
         <h1 className='seconds-elapsed'>Stopwatch Time</h1>
+        <p>{formatTime(currentTime)}</p>
         <section className='buttons'>
           <button className="start-btn" onClick={startTimer}>START</button>
           <button className="stop-btn" onClick={stopTimer}>STOP</button>
