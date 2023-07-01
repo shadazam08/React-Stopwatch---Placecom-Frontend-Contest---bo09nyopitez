@@ -47,7 +47,7 @@ const App = () => {
       <section className='lap-section'>
         {laps.length > 0 && <h2>Laps</h2>}
         <section className='laps'>
-          {laps.map((lap, index) => { <p>{lap}</p> })}
+          {laps.map((lap, index) => { <p key={index}>{lap}</p> })}
 
           {/* <p>lap</p>
           <p>lap</p> */}
